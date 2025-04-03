@@ -1,0 +1,234 @@
+{
+    "$schema": "../node_modules/@lobehub/chat-plugin-sdk/schema.json",
+    "api": [
+        {
+            "url": "http://localhost:3000/api/github-mcp",
+            "name": "githubMCP",
+            "description": "Connect to Github MCP tool",
+            "parameters": {
+                "properties": {},
+                "required": [],
+                "type": "object"
+            }
+        },
+        {
+            "url": "http://localhost:3000/api/github-code-index",
+            "name": "indexGithubRepo",
+            "description": "Set the github repository url for clone and code indexing.",
+            "parameters": {
+                "properties": {
+                    "repo_url": {
+                        "description": "The github repo URL to be indexed.",
+                        "type": "string"
+                    }
+                },
+                "required": ["repo_url"],
+                "type": "object"
+            }
+        },
+        {
+            "url": "http://localhost:3000/api/refresh-index",
+            "name": "refreshProjectIndex",
+            "description": "Set project path and Refresh the project index for latest changes",
+            "parameters": {
+                "properties": {
+                    "project_path": {
+                        "description": "The project path of the project/repository. You(AI system) must to fill this params(project_path) if it already exists in your memory or using the project path result after you successfully clone the repo.",
+                        "type": "string"
+                    }
+                },
+                "required": ["project_path"],
+                "type": "object"
+            }
+        },
+        {
+            "url": "http://localhost:3000/api/search-code",
+            "name": "searchCode",
+            "description": "Search for code matches within the indexed files.",
+            "parameters": {
+                "properties": {
+                    "query": {
+                        "description": "The search query for code.",
+                        "type": "string"
+                    },
+                    "extensions": {
+                        "description": "Optional list of file extensions to filter search. You can fill or ignore extensions based on user prompt",
+                        "type": "array",
+                        "items": { "type": "string" }
+                    },
+                    "case_sensitive": {
+                        "description": "Whether the search is case-sensitive. You can fill or ignore extensions based on user prompt",
+                        "type": "boolean"
+                    },
+                    "project_path": {
+                        "description": "The project path of the project/repository. You(AI system) must to fill this params(project_path) if it already exists in your memory or using the project path result after you successfully clone the repo.",
+                        "type": "string"
+                    }
+                },
+                "required": ["query", "project_path"],
+                "type": "object"
+            }
+        },
+        {
+            "url": "http://localhost:3000/api/find-files",
+            "name": "findFiles",
+            "description": "Find files in the project that match the given pattern.",
+            "parameters": {
+                "properties": {
+                    "pattern": {
+                        "description": "Find files in the project that match the given pattern. Supports glob patterns like *.py or **/*.js. You should edit this param based on user prompt",
+                        "type": "string"
+                    },
+                    "project_path": {
+                        "description": "The project path of the project/repository. You(AI system) must to fill this params(project_path) if it already exists in your memory or using the project path result after you successfully clone the repo.",
+                        "type": "string"
+                    }
+                },
+                "required": ["pattern", "project_path"],
+                "type": "object"
+            }
+        },
+        {
+            "url": "http://localhost:3000/api/get-file-summary",
+            "name": "getFileSummary",
+            "description": "Get a summary of a specific file, including, file content(if specific), line count, functions, classes, imports statements, and basic complexity metrics.",
+            "parameters": {
+                "properties": {
+                    "file_path": {
+                        "description": "Path to the file to summarize.",
+                        "type": "string"
+                    },
+                    "project_path": {
+                        "description": "The project path of the project/repository. You(AI system) must to fill this params(project_path) if it already exists in your memory or using the project path result after you successfully clone the repo.",
+                        "type": "string"
+                    },
+                    "include_file_content": {
+                        "description": "Whether to include the file conent. Based on user prompt and the chat context, you should decide whether to include the file content or not.",
+                        "type": "boolean"
+                    }
+                },
+                "required": ["file_path", "project_path"],
+                "type": "object"
+            }
+        },
+        {
+            "url": "http://localhost:3000/api/git-status",
+            "name": "gitStatusTool",
+            "description": "Shows the git working tree status (changes not staged, changes staged, untracked files).",
+            "parameters": {
+                "properties": {
+                    "project_path": {
+                        "description": "The project path of the project/repository. You(AI system) must to fill this params(project_path) if it already exists in your memory or using the project path result after you successfully clone the repo.",
+                        "type": "string"
+                    }
+                },
+                "required": ["project_path"],
+                "type": "object"
+            }
+        },
+        {
+            "url": "http://localhost:3000/api/git-show",
+            "name": "gitShowTool",
+            "description": "Shows the git working tree status (changes not staged, changes staged, untracked files).",
+            "parameters": {
+                "properties": {
+                    "project_path": {
+                        "description": "The project path of the project/repository. You(AI system) must to fill this params(project_path) if it already exists in your memory or using the project path result after you successfully clone the repo.",
+                        "type": "string"
+                    },
+                    "revision": {
+                        "description": "Identify the specific point in history to show. **You (the AI) MUST determine the correct revision based on the user's request.** Examples include: \n- A full commit hash (e.g., 'f7e6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8')\n- A short commit hash (e.g., 'f7e6a5b')\n- A branch name (e.g., 'main', 'develop', 'feature/user-auth')\n- A tag name (e.g., 'v1.0', 'v2.1.3-beta', 'release-candidate')\n- Special references like 'HEAD' (the currently checked-out commit)\n- Relative references like 'HEAD~1' (one commit before HEAD), 'main~3' (three commits before the tip of main), 'v1.0^' (the first parent of the commit tagged v1.0).\nIf the user asks for 'the latest commit', use 'HEAD' or the relevant branch name.",
+                        "type": "string"
+                    }
+                },
+                "required": ["project_path", "revision"],
+                "type": "object"
+            }
+        },
+        {
+            "url": "http://localhost:3000/api/git-log",
+            "name": "gitLogTool",
+            "description": "Shows the git working tree status (changes not staged, changes staged, untracked files).",
+            "parameters": {
+                "properties": {
+                    "project_path": {
+                        "description": "The project path of the project/repository. You(AI system) must to fill this params(project_path) if it already exists in your memory or using the project path result after you successfully clone the repo.",
+                        "type": "string"
+                    },
+                    "max_count": {
+                        "description": "Optional. The maximum number of commit logs to retrieve. (default: 10)",
+                        "type": "string"
+                    }
+                },
+                "required": ["project_path"],
+                "type": "object"
+            }
+        },
+        {
+            "url": "http://localhost:3000/api/git-search-commits",
+            "name": "git_search_commits_tool",
+            "description": "Search through indexed commits for code, messages, or file paths matching the query.",
+            "parameters": {
+                "properties": {
+                    "project_path": {
+                        "description": "The project path of the project/repository. You(AI system) must to fill this params(project_path) if it already exists in your memory or using the project path result after you successfully clone the repo.",
+                        "type": "string"
+                    },
+                    "query": {
+                        "description": "The search term for code, messages, or file paths. You can edit this param based on user prompt",
+                        "type": "string"
+                    },
+                    "max_results": {
+                        "description": "Maximum number of search results to return (default: 10).",
+                        "type": "integer"
+                    },
+                    "search_file_content": {
+                        "description": "Whether to search within the content of files in commits (default: true).",
+                        "type": "boolean"
+                    },
+                    "search_commit_messages": {
+                        "description": "Whether to search within commit messages (default: true).",
+                        "type": "boolean"
+                    },
+                    "search_file_paths": {
+                        "description": "Whether to search within the paths of files changed in commits (default: true).",
+                        "type": "boolean"
+                    },
+                    "author": {
+                        "description": "Optional. Only search commits by this author.",
+                        "type": "string"
+                    }
+                },
+                "required": ["project_path", "query"],
+                "type": "object"
+            }
+        }
+    ],
+    "author": "LobeHub",
+    "createdAt": "2023-09-03",
+    "homepage": "https://github.com/lobehub/chat-plugin-template",
+    "identifier": "zien-custom-code-index",
+    "meta": {
+        "avatar": "🚀",
+        "tags": ["plugin", "code-analysis"],
+        "title": "Code Analysis Plugin",
+        "description": "A plugin for managing and analyzing project code."
+    },
+    "settings": {
+        "type": "object",
+        "properties": {
+            "GITHUB_ACCESS_TOKEN": {
+                "title": "Github access token",
+                "type": "string",
+                "description": "Please add the access token.",
+                "format": "password"
+            }
+        }
+    },
+    "gateway": "http://localhost:3000/api/gateway",
+    "ui": {
+        "url": "http://localhost:3000",
+        "height": 500
+    },
+    "version": "1"
+}
